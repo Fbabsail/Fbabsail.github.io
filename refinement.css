@@ -44,6 +44,7 @@ header{justify-content:space-between}
 @keyframes food-collect{0%,82%,100%{opacity:1;transform:scale(1)}85%,94%{opacity:0}}
 @media(prefers-reduced-motion:reduce){.world-route{opacity:1}}
 /* Let the bio follow the available reading width on smaller screens. */
+footer{flex-wrap:wrap}.footer-controls{flex-wrap:wrap;justify-content:flex-end}.footer-controls button{min-height:28px}.footer-controls button:disabled{cursor:wait;opacity:.65}#pdf-status:empty{display:none}#pdf-status{flex-basis:100%;font-size:12px;text-align:right}@media(max-width:380px){footer{gap:10px}.footer-controls{gap:12px}}
 .bio-phrase{white-space:nowrap}
 @media(max-width:620px){
  .intro .bio-copy .bio-summary,.intro .bio-copy .bio-personal{max-width:100%;text-wrap:pretty}
