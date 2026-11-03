@@ -71,23 +71,34 @@ resumeDialog.addEventListener('click',e=>{if(e.target===resumeDialog){const r=re
 function updateVisibility(){document.body.classList.toggle('page-hidden',document.hidden);if(document.hidden)content.querySelectorAll('video').forEach(video=>video.pause());}
 document.addEventListener('visibilitychange',updateVisibility);updateVisibility();
 
-// Two-link arm geometry keeps the tool upright instead of rotating the whole rig.
+// One workpiece travels through feed, grip, transfer, release, and outfeed.
 (function animateFactoryCard(){
  const tile=document.querySelector('.factoryos-visual');if(!tile)return;
- const svg=tile.querySelector('svg'),upper=svg.querySelector('[data-arm="upper"]'),forearm=svg.querySelector('[data-arm="forearm"]'),elbow=svg.querySelector('[data-arm="elbow"]'),tool=svg.querySelector('[data-arm="tool"]');
- const part=svg.querySelector('.factory-part'),held=svg.querySelector('.factory-held'),placed=svg.querySelector('.factory-placed'),check=svg.querySelector('.factory-check'),treads=svg.querySelector('.factory-treads');
- const stops=[[0,93,44],[.12,93,44],[.28,70,74],[.36,70,74],[.45,70,44],[.59,142,44],[.69,142,72],[.76,142,72],[.87,142,44],[.97,93,44],[1,93,44]];
+ const find=name=>tile.querySelector(`[data-cell="${name}"]`);
+ const outline=find('arm-outline'),body=find('arm-body'),elbow=find('elbow'),hub=find('elbow-hub'),tool=find('tool'),gripper=find('gripper'),part=find('part'),infeed=find('infeed'),outfeed=find('outfeed');
+ const poses=[[0,101,45],[.12,101,45],[.26,84,67],[.35,84,67],[.45,84,43],[.59,132,43],[.69,132,67],[.76,132,67],[.86,132,43],[.97,101,45],[1,101,45]];
+ const clamp=v=>Math.max(0,Math.min(1,v));
+ const smooth=v=>{const u=clamp(v);return u*u*u*(10+u*(-15+6*u));};
  function draw(t){
-  let n=1;while(n<stops.length-1&&t>stops[n][0])n++;
-  const a=stops[n-1],b=stops[n],u=Math.max(0,Math.min(1,(t-a[0])/(b[0]-a[0]))),ease=u*u*(3-2*u);
-  const x=a[1]+(b[1]-a[1])*ease,y=a[2]+(b[2]-a[2])*ease,dx=x-40,dy=y-82,d=Math.hypot(dx,dy),l1=53,l2=58;
-  const angle=Math.atan2(dy,dx)-Math.acos(Math.max(-1,Math.min(1,(l1*l1+d*d-l2*l2)/(2*l1*d)))),ex=40+l1*Math.cos(angle),ey=82+l1*Math.sin(angle);
-  upper.setAttribute('d',`M40 82L${ex} ${ey}`);forearm.setAttribute('d',`M${ex} ${ey}L${x} ${y}`);elbow.setAttribute('cx',ex);elbow.setAttribute('cy',ey);tool.setAttribute('transform',`translate(${x} ${y})`);
-  part.setAttribute('x',16+49.5*Math.min(t/.28,1));part.style.opacity=t<.35?'1':'0';held.style.opacity=t>=.35&&t<.73?'1':'0';placed.style.opacity=t>=.73&&t<.96?'1':'0';check.style.opacity=t>=.79&&t<.93?'1':'0';treads.setAttribute('transform',`translate(${(t*75)%15} 0)`);
+  let i=1;while(i<poses.length-1&&t>poses[i][0])i++;
+  const a=poses[i-1],b=poses[i],u=smooth((t-a[0])/(b[0]-a[0])),x=a[1]+(b[1]-a[1])*u,y=a[2]+(b[2]-a[2])*u;
+  const dx=x-36,dy=y-78,d=Math.hypot(dx,dy),upper=48,lower=58;
+  const theta=Math.atan2(dy,dx)-Math.acos(Math.max(-1,Math.min(1,(upper*upper+d*d-lower*lower)/(2*upper*d)))),ex=36+upper*Math.cos(theta),ey=78+upper*Math.sin(theta);
+  const arm=`M36 78L${ex} ${ey}L${x} ${y}`;
+  outline.setAttribute('d',arm);body.setAttribute('d',arm);elbow.setAttribute('cx',ex);elbow.setAttribute('cy',ey);hub.setAttribute('cx',ex);hub.setAttribute('cy',ey);tool.setAttribute('transform',`translate(${x} ${y})`);
+  const closing=smooth((t-.28)/.05),opening=smooth((t-.70)/.045),gap=6-1.7*closing+1.7*opening;
+  gripper.setAttribute('d',`M0 3V10M${-gap} 10H${gap}M${-gap} 10V21M${gap} 10V21`);
+  let px,py;
+  if(t<.33){px=52+32*smooth(t/.18);py=84;}
+  else if(t<.725){px=x;py=y+17;}
+  else{px=132+48*smooth((t-.79)/.21);py=84;}
+  part.setAttribute('x',px-3.5);part.setAttribute('y',py-3.5);
+  infeed.setAttribute('transform',`translate(${(32*smooth(t/.18))%8} 0)`);
+  outfeed.setAttribute('transform',`translate(${(48*smooth((t-.79)/.21))%8} 0)`);
  }
  let visible=false,frame=0,last=0,elapsed=0;
- function tick(now){if(last)elapsed+=Math.min(now-last,50);last=now;draw((elapsed%9000)/9000);frame=requestAnimationFrame(tick);}
- function sync(){cancelAnimationFrame(frame);frame=0;last=0;if(visible&&!paused&&!document.hidden&&!reducedMotion.matches)frame=requestAnimationFrame(tick);else if(reducedMotion.matches)draw(0);}
+ function tick(now){if(last)elapsed+=Math.min(now-last,50);last=now;draw((elapsed%10000)/10000);frame=requestAnimationFrame(tick);}
+ function sync(){cancelAnimationFrame(frame);frame=0;last=0;if(visible&&!paused&&!document.hidden&&!reducedMotion.matches)frame=requestAnimationFrame(tick);else if(reducedMotion.matches)draw(.08);}
  new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;sync();},{threshold:.15}).observe(tile);
- motionToggle.addEventListener('click',sync);reducedMotion.addEventListener('change',sync);document.addEventListener('visibilitychange',sync);draw(0);
+ motionToggle.addEventListener('click',sync);reducedMotion.addEventListener('change',sync);document.addEventListener('visibilitychange',sync);draw(.08);
 })();
