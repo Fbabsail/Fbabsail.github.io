@@ -27,7 +27,7 @@ fs.mkdirSync(outputs, { recursive: true });
   assert.equal(download.suggestedFilename(), 'Faris_Babsail_Portfolio.pdf');
   await page.screenshot({ path: path.join(outputs, 'footer-desktop.png'), fullPage: true });
   const data = await page.evaluate(() => window.portfolioPdf.collect());
-  assert.equal(data.projects.length, 7);
+  assert.equal(data.projects.length, 8);
   assert.equal(data.earlier.length, 2);
   fs.writeFileSync(path.join(outputs, 'pdf-model.json'), JSON.stringify(data));
   // Published membership, removal with stale case data, long text, and galleries.
@@ -47,7 +47,7 @@ fs.mkdirSync(outputs, { recursive: true });
     const doc = await window.portfolioPdf.create(model);
     return { model, pdf: Array.from(new Uint8Array(doc.output('arraybuffer'))) };
   });
-  assert.equal(future.model.projects.length, 8);
+  assert.equal(future.model.projects.length, 9);
   assert(!future.model.projects.some(p => p.id === 'combat' || p.id === 'draft'));
   assert(future.model.bio[0].startsWith('Updated profile content for regression check.'));
   fs.writeFileSync(path.join(outputs, 'future.pdf'), Buffer.from(future.pdf));

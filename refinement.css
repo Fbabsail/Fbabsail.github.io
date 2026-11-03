@@ -56,3 +56,18 @@ footer{flex-wrap:wrap}.footer-controls{flex-wrap:wrap;justify-content:flex-end}.
  .bio-desktop-break{display:none}
 }
 
+
+/* FactoryOS: the same monochrome miniature language as the other projects. */
+.factory-belt{fill:#f6f6f6;stroke:#aaa}.factory-treads{stroke:#d4d4d4;animation:factory-feed 1.6s linear infinite;animation-play-state:paused}.factory-legs,.factory-base{stroke:#999}.factory-base{fill:#eee}.factory-link{stroke:#666;stroke-width:7;stroke-linecap:round}.factory-joint{fill:#fff;stroke:#555;stroke-width:1.5}.factory-gripper{stroke:#555;stroke-width:1.8;stroke-linecap:round}.factory-upper{transform-origin:90px 67px;animation:factory-reach 8s cubic-bezier(.45,0,.2,1) infinite;animation-play-state:paused}.factory-forearm{transform-origin:90px 40px;animation:factory-elbow 8s cubic-bezier(.45,0,.2,1) infinite;animation-play-state:paused}.factory-part,.factory-placed{fill:#888;stroke:#666}.factory-part{animation:factory-arrival 8s linear infinite;animation-play-state:paused}.factory-fixture{stroke:#aaa;fill:#f5f5f5}.factory-placed{opacity:0;animation:factory-place 8s ease infinite;animation-play-state:paused}.factory-check{stroke:#555;stroke-width:1.5;stroke-dasharray:18;stroke-dashoffset:18;opacity:0;animation:factory-confirm 8s ease infinite;animation-play-state:paused}
+@keyframes factory-feed{to{transform:translateX(15px)}}
+@keyframes factory-reach{0%,12%,100%{transform:rotate(0)}27%,36%{transform:rotate(-32deg)}50%{transform:rotate(-8deg)}66%,77%{transform:rotate(63deg)}90%{transform:rotate(0)}}
+@keyframes factory-elbow{0%,12%,100%{transform:rotate(0)}27%,36%{transform:rotate(-35deg)}50%{transform:rotate(-10deg)}66%,77%{transform:rotate(-195deg)}90%{transform:rotate(0)}}
+@keyframes factory-arrival{0%{transform:translateX(0);opacity:0}8%{opacity:1}28%,36%{transform:translateX(40px);opacity:1}39%,100%{transform:translateX(40px);opacity:0}}
+@keyframes factory-place{0%,65%,96%,100%{opacity:0}70%,89%{opacity:1}}
+@keyframes factory-confirm{0%,73%,96%,100%{opacity:0;stroke-dashoffset:18}80%,89%{opacity:1;stroke-dashoffset:0}}
+.gallery-factoryos img{height:auto;max-height:540px;padding:0;object-fit:contain}.gallery-factoryos .full-image{background:#f3f3f3}.gallery-factoryos figcaption,.project-recordings figcaption{color:#606060;font-size:13px;line-height:1.6}.project-recordings{margin:0 0 30px}.project-recordings>h3{font-size:16px;font-weight:500;letter-spacing:0;margin:0 0 18px}.project-recordings figure{margin:0 0 24px}.project-recordings video{display:block;width:100%;height:auto;background:#eee}.project-recordings figcaption{margin-top:12px}.page-hidden .project-visual *{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){.factory-part{opacity:1}.factory-check{opacity:1;stroke-dashoffset:0}}
+body.motion-paused .factory-part{opacity:1}body.motion-paused .factory-check{opacity:1;stroke-dashoffset:0}
+
+.factory-held{fill:#888;stroke:#666;opacity:0;animation:factory-carry 8s linear infinite;animation-play-state:paused}@keyframes factory-carry{0%,36%,70%,100%{opacity:0}39%,67%{opacity:1}}
+#factoryos .project-body>p:first-of-type{color:#707070}
