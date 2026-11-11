@@ -67,7 +67,7 @@ function recordingsMarkup(id) {
 function factoryRecordingsMarkup(id){if(id!=='factoryos')return '';return `<section class="project-recordings" aria-labelledby="recordings-title"><h3 id="recordings-title">See it in action</h3><figure><video controls playsinline preload="none" poster="media/factoryos-pickup-poster.jpg" aria-label="Screen recording of camera-guided robot pickup in FactoryOS"><source src="media/factoryos-pickup.mp4" type="video/mp4">Your browser does not support embedded video. <a href="media/factoryos-pickup.mp4">Watch the pickup recording</a>.</video><figcaption>Camera-guided pickup: tracking a moving part, gripping, and checking the lift.</figcaption></figure><figure><video controls playsinline preload="none" poster="media/factoryos-layout-run.jpg" aria-label="Screen recording of adding an obstacle, applying the layout, and running the simulation in FactoryOS"><source src="media/factoryos-layout.mp4" type="video/mp4">Your browser does not support embedded video. <a href="media/factoryos-layout.mp4">Watch the layout recording</a>.</video><figcaption>Adding an obstacle, applying the layout, and running the line with the obstacle in the 3D scene.</figcaption></figure></section>`;}
 const dialog=document.querySelector('#case-dialog'),content=document.querySelector('#case-content');
 let opener=null;
-const order=['factoryos','marketplaceos','combat','sound','cognate','music','tidebound','exoskeleton','imaging'];
+const order=['factoryos','combat','sound','cognate','marketplaceos','music','tidebound','exoskeleton','imaging'];
 function openCase(id){
  const p=cases[id];if(!p)return;
  content.querySelectorAll("video").forEach(video=>video.pause());
@@ -143,4 +143,48 @@ document.addEventListener('visibilitychange',updateVisibility);updateVisibility(
  function sync(){cancelAnimationFrame(frame);frame=0;last=0;if(visible&&!paused&&!document.hidden&&!reducedMotion.matches)frame=requestAnimationFrame(tick);else if(reducedMotion.matches)draw(.08);}
  new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;sync();},{threshold:.15}).observe(tile);
  motionToggle.addEventListener('click',sync);reducedMotion.addEventListener('change',sync);document.addEventListener('visibilitychange',sync);draw(.08);
+})();
+
+
+// A delivery follows the street corners, pauses at each stop, then returns.
+(function animateDeliveryCard() {
+ const tile = document.querySelector('.marketplaceos-visual');
+ const car = tile.querySelector('[data-delivery="car"]');
+ const parcel = tile.querySelector('[data-delivery="parcel"]');
+ const done = tile.querySelector('[data-delivery="done"]');
+ const stops = [[0,32,73,0],[.08,32,73,0],[.26,119,73,0],
+  [.29,119,73,-90],[.36,119,45,-90],[.39,119,45,0],
+  [.47,150,45,0],[.59,150,45,0],[.63,150,45,180],
+  [.71,119,45,180],[.74,119,45,90],[.81,119,73,90],
+  [.84,119,73,180],[.97,32,73,180],[1,32,73,360]];
+ function draw(t) {
+  let i = 1;
+  while (i < stops.length - 1 && t > stops[i][0]) i++;
+  const a = stops[i - 1], b = stops[i];
+  const progress = (t - a[0]) / (b[0] - a[0]);
+  const u = progress * progress * (3 - 2 * progress);
+  const x = a[1] + (b[1] - a[1]) * u;
+  const y = a[2] + (b[2] - a[2]) * u;
+  car.setAttribute('transform', `translate(${x} ${y}) rotate(${a[3] + (b[3] - a[3]) * u})`);
+  parcel.setAttribute('opacity', t < .07 || t > .98 ? '1' : '0');
+  done.setAttribute('opacity', t > .49 && t < .63 ? '1' : '0');
+ }
+ let visible = false, frame = 0, last = 0, elapsed = 0;
+ function tick(now) {
+  if (last) elapsed += Math.min(now - last, 50);
+  last = now;
+  draw((elapsed % 14000) / 14000);
+  frame = requestAnimationFrame(tick);
+ }
+ function sync() {
+  cancelAnimationFrame(frame);
+  last = 0;
+  if (visible && !paused && !document.hidden && !reducedMotion.matches) frame = requestAnimationFrame(tick);
+  else if (reducedMotion.matches) draw(.25);
+ }
+ new IntersectionObserver(entries => { visible = entries[0].isIntersecting; sync(); }, { threshold: .15 }).observe(tile);
+ motionToggle.addEventListener('click', sync);
+ reducedMotion.addEventListener('change', sync);
+ document.addEventListener('visibilitychange', sync);
+ draw(0);
 })();

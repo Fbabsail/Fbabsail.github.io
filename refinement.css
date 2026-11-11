@@ -67,3 +67,13 @@ footer{flex-wrap:wrap}.footer-controls{flex-wrap:wrap;justify-content:flex-end}.
 .gallery-marketplaceos img{height:auto;max-height:540px;padding:0;object-fit:contain}
 .gallery-marketplaceos .full-image{background:#f3f3f3}
 .gallery-marketplaceos figcaption{color:#606060;font-size:13px;line-height:1.6}
+
+.marketplaceos-visual .delivery-streets{stroke:#ececec;stroke-width:9}
+.marketplaceos-visual .delivery-block{stroke:#e8e8e8;fill:#fafafa}
+.marketplaceos-visual .delivery-route{stroke:#bcbcbc;stroke-dasharray:2 4}
+.marketplaceos-visual .delivery-shop,.marketplaceos-visual .delivery-home{stroke:#999;fill:#fff;stroke-linejoin:round}
+.marketplaceos-visual .delivery-car{fill:#f4f4f4;stroke:#666;stroke-width:1.2}
+.marketplaceos-visual .delivery-tires{stroke:#777;stroke-width:2;stroke-linecap:round}
+.marketplaceos-visual .delivery-parcel{fill:#aaa;stroke:#777}
+.marketplaceos-visual .delivery-done circle{fill:#fff;stroke:#aaa}
+.marketplaceos-visual .delivery-done path{stroke:#666;stroke-width:1.3}
