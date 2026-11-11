@@ -77,3 +77,5 @@ footer{flex-wrap:wrap}.footer-controls{flex-wrap:wrap;justify-content:flex-end}.
 .marketplaceos-visual .delivery-parcel{fill:#aaa;stroke:#777}
 .marketplaceos-visual .delivery-done circle{fill:#fff;stroke:#aaa}
 .marketplaceos-visual .delivery-done path{stroke:#666;stroke-width:1.3}
+
+.footer-controls #download-pdf{display:inline-flex;align-items:center;min-height:28px;color:#595959;font-size:13px;text-decoration:none}.footer-controls #download-pdf:hover{color:#222;text-decoration:underline;text-underline-offset:4px}.footer-controls #download-pdf:focus-visible{outline:2px solid #385846;outline-offset:5px}
